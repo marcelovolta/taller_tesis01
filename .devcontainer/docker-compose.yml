@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  workspace:
+    image: mcr.microsoft.com/devcontainers/python:3.12
+    volumes:
+      - ..:/workspace:cached
+    command: sleep infinity
+    depends_on:
+      - postgres
+    environment:
+      DBT_PROFILES_DIR: /workspace/.dbt
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: dbt_user
+      POSTGRES_PASSWORD: dbt_pass
+      POSTGRES_DB: analytics
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

@@ -1,0 +1,17 @@
+{
+    "name": "dbt + PostgreSQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "innoverio.vscode-dbt-power-user",
+          "bastienboutonnet.vscode-dbt",
+          "mtxr.sqltools",
+          "mtxr.sqltools-driver-pg"
+        ]
+      }
+  },
+  "postCreateCommand": "pip install --upgrade pip && pip install dbt-postgres==1.9.0 && dbt deps"
+}
