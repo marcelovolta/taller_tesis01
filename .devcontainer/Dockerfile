@@ -6,3 +6,11 @@ RUN apt-get update \
 
 RUN pip install --upgrade pip \
     && pip install "dbt-postgres==1.9.0"
+
+# Basic libraries for data manipulation
+RUN pip install "pandas==2.2.3" \
+    && pip install "polars==1.23.0" \
+    && pip install "duckdb==1.5.2"
+
+# Needed for getting comments from YouTube
+RUN pip install "google-api-python-client==2.182.0"
