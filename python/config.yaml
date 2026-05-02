@@ -1,0 +1,9 @@
+PROJECT_NAME: "movie success prediction"
+START_DATE: "2024-01-01"
+END_DATE: "2024-12-31"
+POSTGRE_HOST: "postgres"
+POSTGRE_PORT: 5432
+DB_NAME: "analytics"
+DB_SCHEMA: "public"
+TABLE_NAME: "movies_2025"
+

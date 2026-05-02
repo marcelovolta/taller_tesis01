@@ -6,3 +6,4 @@ data/
 logs/
 python/logs/
 target/
+.devcontainer/postgres_data/

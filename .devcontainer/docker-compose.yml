@@ -2,7 +2,9 @@ version: "3.8"
 
 services:
   workspace:
-    image: mcr.microsoft.com/devcontainers/python:3.12
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspace:cached
     command: sleep infinity
@@ -18,9 +20,8 @@ services:
       POSTGRES_PASSWORD: dbt_pass
       POSTGRES_DB: analytics
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
 
-volumes:
-  postgres_data:
+
