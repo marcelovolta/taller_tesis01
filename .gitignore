@@ -7,3 +7,6 @@ logs/
 python/logs/
 target/
 .devcontainer/postgres_data/
+
+.claude/
+.DS_Store

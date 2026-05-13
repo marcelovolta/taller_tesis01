@@ -43,30 +43,21 @@ def main():
     PROJECT_NAME = config.PROJECT_NAME
     YEARS = config.YEARS
     
-    print(f"API KEY de TMDB: {TMDB_API_KEY}")
     
-    df_movies = get_tmdb_movies_us(max_pages=None)
-    print(df_movies.head())
-    print(f"Total películas recuperadas: {len(df_movies)}")
+    # Get movies from TMDB
+    # df_movies = get_tmdb_movies_us(max_pages=None)
+    # print(df_movies.head())
+    # print(f"Total películas recuperadas: {len(df_movies)}")
 
-    load_to_postgres(df_movies)
+    # load_to_postgres(df_movies)
 
-    print("Tabla public.movies_2025 creada y cargada correctamente.")
+    # print("Tabla public.movies_2025 cargada correctamente.")
 
 
     # Find trailers
-    # trailers = find_trailers("werewolf game")
-    # logger.info(f"Found {len(trailers)} trailers")
-
-    # Get comments for each trailer
-    # comments_df = pd.DataFrame()
-    # for trailer in trailers:
-    #     comments = get_comments(trailer["video_id"], limit_date=dt.date(2025, 1, 21))
-    #     logger.info(f"Found {len(comments)} comments for {trailer['title']}")
-    #     comments_df = pd.concat([comments_df, comments])
-
-    # # Save comments to a CSV file
-    # comments_df.to_csv(f"../data/comments_{this_date}.csv", index=False)
+    # Set reset to True to clear the progress and comments tables
+    # and reprocess everything from scratch.
+    process_trailer_comments(reset=False)
 
 '''
 This is the main function that will be called when the script is run.
