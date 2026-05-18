@@ -49,42 +49,42 @@ def get_tmdb_movies_us(max_pages=None):
 
         for movie in data.get("results", []):
             details = get_movie_details(movie["id"])
-            
-            rows.append({
-                "tmdb_id": details.get("id"),
-                "imdb_id": details.get("imdb_id"),
-                "title": details.get("title"),
-                "original_title": details.get("original_title"),
-                "release_date": details.get("release_date"),
-                "original_language": details.get("original_language"),
-                "origin_country": ", ".join(details.get("origin_country", [])),
-                "production_countries": ", ".join(
-                    c.get("name", "") for c in details.get("production_countries", [])
-                ),
-                "production_companies": ", ".join(
-                    c.get("name", "") for c in details.get("production_companies", [])
-                ),
-                "genres": ", ".join(
-                    g.get("name", "") for g in details.get("genres", [])
-                ),
-                "budget": details.get("budget"),
-                "revenue": details.get("revenue"),
-                "runtime": details.get("runtime"),
-                "overview": details.get("overview"),
-                "popularity": details.get("popularity"),
-                "vote_average": details.get("vote_average"),
-                "vote_count": details.get("vote_count"),
-                "cast_top_10": ", ".join(
-                    c.get("name", "")
-                    for c in details.get("credits", {}).get("cast", [])[:10]
-                ),
-                "directors": ", ".join(
-                    c.get("name", "")
-                    for c in details.get("credits", {}).get("crew", [])
-                    if c.get("job") == "Director"
-                ),
-                "youtube_trailer_key": get_youtube_trailer_key(details),
-            })
+            if details is not None and details.get("release_date") is not None:
+                rows.append({
+                    "tmdb_id": details.get("id"),
+                    "imdb_id": details.get("imdb_id"),
+                    "title": details.get("title"),
+                    "original_title": details.get("original_title"),
+                    "release_date": details.get("release_date"),
+                    "original_language": details.get("original_language"),
+                    "origin_country": ", ".join(details.get("origin_country", [])),
+                    "production_countries": ", ".join(
+                        c.get("name", "") for c in details.get("production_countries", [])
+                    ),
+                    "production_companies": ", ".join(
+                        c.get("name", "") for c in details.get("production_companies", [])
+                    ),
+                    "genres": ", ".join(
+                        g.get("name", "") for g in details.get("genres", [])
+                    ),
+                    "budget": details.get("budget"),
+                    "revenue": details.get("revenue"),
+                    "runtime": details.get("runtime"),
+                    "overview": details.get("overview"),
+                    "popularity": details.get("popularity"),
+                    "vote_average": details.get("vote_average"),
+                    "vote_count": details.get("vote_count"),
+                    "cast_top_10": ", ".join(
+                        c.get("name", "")
+                        for c in details.get("credits", {}).get("cast", [])[:10]
+                    ),
+                    "directors": ", ".join(
+                        c.get("name", "")
+                        for c in details.get("credits", {}).get("crew", [])
+                        if c.get("job") == "Director"
+                    ),
+                    "youtube_trailer_key": get_youtube_trailer_key(details),
+                })
 
             time.sleep(0.25)
 

@@ -23,6 +23,7 @@ DB_SCHEMA = config.DB_SCHEMA
 MOVIES_TABLE = "movies_2025"
 COMMENTS_TABLE = "trailer_comments"
 PROGRESS_TABLE = "trailer_comments_progress"
+BOXOFFICE_TABLE = "box_office"
 
 
 # ----
@@ -74,15 +75,19 @@ def reset_progress(engine):
 
 def get_pending_movies(engine):
     """
-    Returns movies with runtime > 60 and release_date >= 2024-01-01
-    that have NOT been successfully processed yet.
+    Returns "viable" movies — those with a non-null opening_weekend_revenue
+    in box_office AND a non-null budget (either box_office.production_budget
+    or movies.budget) — that have NOT yet been successfully processed and
+    are not marked terminal 'no_trailers'.
     """
     query = text(f"""
         SELECT m.tmdb_id, m.title, m.release_date, m.youtube_trailer_key
         FROM {DB_SCHEMA}.{MOVIES_TABLE} m
+        INNER JOIN {DB_SCHEMA}.{BOXOFFICE_TABLE} bo ON m.tmdb_id = bo.tmdb_id
         LEFT JOIN {DB_SCHEMA}.{PROGRESS_TABLE} p ON m.tmdb_id = p.tmdb_id
         WHERE m.runtime > 60
-          AND m.release_date >= '2024-01-01'
+          AND bo.opening_weekend_revenue IS NOT NULL
+          AND COALESCE(bo.production_budget, m.budget) IS NOT NULL
           AND (p.tmdb_id IS NULL OR p.status NOT IN ('success', 'no_trailers'))
         ORDER BY m.release_date ASC
     """)

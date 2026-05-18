@@ -1071,3 +1071,17 @@ drop view if exists "analytics"."public"."test__dbt_backup" cascade
 [0m15:42:00.325689 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff7cd9e3c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff7c5f7350>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffff7c3d1430>]}
 [0m15:42:00.325903 [debug] [MainThread]: Flushing usage events
 [0m15:42:01.018026 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m10:25:35.731418 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffaf1d3b30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffaed2f380>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffaf203530>]}
+
+
+============================== 10:25:35.739409 | 7c955adb-7ce2-4c94-bd3a-14cfb298c9df ==============================
+[0m10:25:35.739409 [info ] [MainThread]: Running with dbt=1.11.8
+[0m10:25:35.740056 [debug] [MainThread]: running dbt with arguments {'empty': 'None', 'target_path': 'None', 'debug': 'False', 'warn_error': 'None', 'log_format': 'default', 'profiles_dir': '/workspace/.dbt', 'indirect_selection': 'eager', 'printer_width': '80', 'log_path': '/workspace/logs', 'write_json': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_cache_events': 'False', 'fail_fast': 'False', 'cache_selected_only': 'False', 'partial_parse': 'True', 'invocation_command': 'dbt ', 'send_anonymous_usage_stats': 'True', 'static_parser': 'True', 'use_experimental_parser': 'False', 'no_print': 'None', 'version_check': 'True', 'introspect': 'True', 'use_colors': 'True', 'quiet': 'False'}
+[0m10:25:35.809813 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': '7c955adb-7ce2-4c94-bd3a-14cfb298c9df', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb0fc5ee0>]}
+[0m10:25:35.828742 [info ] [MainThread]: Warning: No packages were found in packages.yml
+[0m10:25:35.832699 [info ] [MainThread]: Warning: No packages were found in packages.yml
+[0m10:25:35.836995 [debug] [MainThread]: Resource report: {"command_name": "deps", "command_success": true, "command_wall_clock_time": 0.14480537, "process_in_blocks": "224", "process_kernel_time": 0.479104, "process_mem_max_rss": "105968", "process_out_blocks": "3", "process_user_time": 1.058069}
+[0m10:25:35.838241 [debug] [MainThread]: Command `cli deps` succeeded at 10:25:35.837945 after 0.15 seconds
+[0m10:25:35.839717 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffb1328a40>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffae1c29c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0xffffadfd4470>]}
+[0m10:25:35.840006 [debug] [MainThread]: Flushing usage events
+[0m10:25:37.096309 [debug] [MainThread]: An error was encountered while trying to flush usage events
