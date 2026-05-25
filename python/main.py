@@ -45,17 +45,17 @@ def main():
     
     
     # Get movies from TMDB
-    # df_movies = get_tmdb_movies_us(max_pages=None)
+    df_movies = get_tmdb_movies_us(max_pages=None)
     # print(df_movies.head())
-    # print(f"Total películas recuperadas: {len(df_movies)}")
-    # load_to_postgres(df_movies)
-    # print("Tabla public.movies_2025 cargada correctamente.")
+    print(f"Total películas recuperadas: {len(df_movies)}")
+    load_to_postgres(df_movies)
+    print("Tabla public.movies_2025 cargada correctamente.")
 
 
     # Find trailers
     # Set reset to True to clear the progress and comments tables
     # and reprocess everything from scratch.
-    process_trailer_comments(reset=False)
+    # process_trailer_comments(reset=False)
 
     # Scrape opening-weekend box office and production budget from The Numbers.
     # Set reset to True to clear box_office and box_office_progress tables.

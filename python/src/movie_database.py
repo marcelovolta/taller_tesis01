@@ -28,7 +28,7 @@ def get_tmdb_movies_us(max_pages=None):
     rows = []
     page = 1
 
-    logger.info("Iniciando recueperación de películas")
+    logger.info("Iniciando recuperación de películas")
     while True:
         url = "https://api.themoviedb.org/3/discover/movie"
 
@@ -43,8 +43,15 @@ def get_tmdb_movies_us(max_pages=None):
             "page": page,
         }
 
-        res = requests.get(url, params=params, timeout=30)
-        res.raise_for_status()
+        try:
+            res = requests.get(url, params=params, timeout=30)
+            res.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            # TMDB Discover caps results at page 500 even when total_pages reports more.
+            # Any other 4xx/5xx: stop paginating but keep what we already collected.
+            logger.error(f"Discover request failed at page {page}: {e}. Returning {len(rows)} rows already collected.")
+            break
+
         data = res.json()
 
         for movie in data.get("results", []):

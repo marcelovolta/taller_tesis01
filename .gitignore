@@ -10,3 +10,5 @@ target/
 
 .claude/
 .DS_Store
+
+.devcontainer/postgres_data.backup*.*
