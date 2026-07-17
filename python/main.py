@@ -45,21 +45,32 @@ def main():
     
     
     # Get movies from TMDB
-    df_movies = get_tmdb_movies_us(max_pages=None)
+    # df_movies = get_tmdb_movies_us(max_pages=None)
     # print(df_movies.head())
-    print(f"Total películas recuperadas: {len(df_movies)}")
-    load_to_postgres(df_movies)
-    print("Tabla public.movies_2025 cargada correctamente.")
-
-
-    # Find trailers
-    # Set reset to True to clear the progress and comments tables
-    # and reprocess everything from scratch.
-    # process_trailer_comments(reset=False)
+    # print(f"Total películas recuperadas: {len(df_movies)}")
+    # load_to_postgres(df_movies)
+    # print("Tabla public.movies_2025 cargada correctamente.")
 
     # Scrape opening-weekend box office and production budget from The Numbers.
     # Set reset to True to clear box_office and box_office_progress tables.
     # process_box_office(reset=False)
+
+
+    # Backfill clean_text for comments ingested before emoji replacement was added.
+    # Safe to run repeatedly — skips rows that already have clean_text populated.
+    # backfill_clean_text()
+
+    # Find trailers only for movies with budget and opening weekend revenue data
+    # Set reset to True to clear the progress and comments tables
+    # and reprocess everything from scratch.
+    # process_trailer_comments(reset=False)
+
+    
+    # Score each row in trailer_comments with the fine-tuned DistilBERT
+    # classifier. Run this from the macOS host (not the dev container) so MPS
+    # is available — it connects to Postgres via POSTGRE_HOST_FROM_HOST/PORT.
+    # Set reset=True to clear trailer_comments_sentiment and re-score all rows.
+    process_trailer_sentiment(reset=False)
 
 '''
 This is the main function that will be called when the script is run.

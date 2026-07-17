@@ -46,11 +46,15 @@ try:
         YEARS = _cfgGeneral.get("YEARS")
         POSTGRE_HOST = _cfgGeneral.get("POSTGRE_HOST")
         POSTGRE_PORT = _cfgGeneral.get("POSTGRE_PORT")
+        POSTGRE_HOST_FROM_HOST = _cfgGeneral.get("POSTGRE_HOST_FROM_HOST")
+        POSTGRE_PORT_FROM_HOST = _cfgGeneral.get("POSTGRE_PORT_FROM_HOST")
         DB_NAME = _cfgGeneral.get("DB_NAME")
         DB_SCHEMA = _cfgGeneral.get("DB_SCHEMA")
         TABLE_NAME = _cfgGeneral.get("TABLE_NAME")
         START_DATE = _cfgGeneral.get("START_DATE")
         END_DATE = _cfgGeneral.get("END_DATE")
+        MODEL_PATH = _cfgGeneral.get("MODEL_PATH")
+        EMOJI_MAP_PATH = _cfgGeneral.get("EMOJI_MAP_PATH")
 
 except Exception as e:
     logger.error(f"Exception while loading the yaml config file: {e}")

@@ -1,0 +1,7 @@
+seeds:
+  - name: emoji_map
+    config:
+      column_types:
+        emoji: text
+        distinct_comments: integer
+        replacement: text

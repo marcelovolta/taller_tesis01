@@ -1,0 +1,25 @@
+version: 2
+
+# 1. SOURCES: Declare raw, external database tables here so you can use {{ source() }}
+sources:
+  - name: analytics          # The source name used as the first argument in {{ source() }}
+    database: analytics     # Optional: Your actual database name if it differs from target
+    schema: public             # The exact schema in your database where these tables live
+    tables:
+      - name: movies_2025        # The exact table name in your database
+      - name: trailer_comments           # The exact table name in your database
+      - name: trailer_comments_copy           # The exact table name in your database
+      - name: trailer_comments_progress           # The exact table name in your database
+      - name: trailer_comments_sentiment           # The exact table name in your database
+      - name: box_office           # The exact table name in your database
+      - name: box_office_progress           # The exact table name in your database
+
+# 2. MODELS: Declare your dbt models here to document them and allow cross-referencing
+# models:
+  # - name: stg_customers        # MUST exactly match your SQL file name (stg_customers.sql)
+  #   description: "Staging model for clean customer data."
+    
+  # - name: stg_orders           # MUST exactly match your SQL file name (stg_orders.sql)
+  #   description: "Staging model for clean order data."
+
+  

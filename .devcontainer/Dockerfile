@@ -29,3 +29,13 @@ RUN pip install "python-dotenv==1.2.1" \
 && pip install "six==1.17.0" \
 && pip install "typing-inspection==0.4.2" \
 && pip install "typing_extensions==4.15.0"
+
+# Needed for clustering notebooks
+RUN pip install "scikit-learn" \
+    && pip install "scikit-learn-extra" \
+    && pip install "scikit-fuzzy" \
+    && pip install "hdbscan"
+
+# Needed for LightGBM
+RUN pip install "lightgbm" \
+    && pip install "optuna"

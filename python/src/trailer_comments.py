@@ -3,6 +3,7 @@ from googleapiclient.errors import HttpError
 import pandas as pd
 from sqlalchemy import create_engine, text
 from src import config
+from src.text_cleaning import get_emoji_map, replace_emojis
 import logging
 import datetime
 import re
@@ -47,9 +48,14 @@ def ensure_tables_exist(engine):
                 author_name         TEXT,
                 author_channel_id   TEXT,
                 text                TEXT,
+                clean_text          TEXT,
                 published_at        TIMESTAMPTZ,
                 like_count          INTEGER
             );
+        """))
+        conn.execute(text(f"""
+            ALTER TABLE {DB_SCHEMA}.{COMMENTS_TABLE}
+            ADD COLUMN IF NOT EXISTS clean_text TEXT;
         """))
         conn.execute(text(f"""
             CREATE TABLE IF NOT EXISTS {DB_SCHEMA}.{PROGRESS_TABLE} (
@@ -60,6 +66,59 @@ def ensure_tables_exist(engine):
             );
         """))
     logger.info("Tables verified/created.")
+
+
+def backfill_clean_text(batch_size: int = 5000):
+    """
+    Populates clean_text for rows where it is NULL (i.e. comments ingested
+    before the emoji-replacement pipeline was added). Processes in batches
+    to avoid loading the full table into memory.
+    """
+    engine = get_engine()
+    emoji_map = get_emoji_map(config.EMOJI_MAP_PATH)
+
+    with engine.connect() as conn:
+        total = conn.execute(text(f"""
+            SELECT COUNT(*) FROM {DB_SCHEMA}.{COMMENTS_TABLE}
+            WHERE clean_text IS NULL AND text IS NOT NULL
+        """)).scalar()
+
+    logger.info(f"Backfill: {total} rows with clean_text IS NULL.")
+
+    if total == 0:
+        logger.info("Backfill: nothing to do.")
+        return
+
+    updated = 0
+    offset = 0
+    while offset < total:
+        with engine.connect() as conn:
+            rows = conn.execute(text(f"""
+                SELECT comment_id, text
+                FROM {DB_SCHEMA}.{COMMENTS_TABLE}
+                WHERE clean_text IS NULL AND text IS NOT NULL
+                LIMIT :batch_size
+            """), {"batch_size": batch_size}).fetchall()
+
+        if not rows:
+            break
+
+        params = [
+            {"comment_id": r.comment_id, "clean_text": replace_emojis(r.text, emoji_map)[:1000]}
+            for r in rows
+        ]
+        with engine.begin() as conn:
+            conn.execute(text(f"""
+                UPDATE {DB_SCHEMA}.{COMMENTS_TABLE}
+                SET clean_text = :clean_text
+                WHERE comment_id = :comment_id
+            """), params)
+
+        updated += len(rows)
+        logger.info(f"Backfill: {updated}/{total} rows updated.")
+        offset += batch_size
+
+    logger.info("Backfill complete.")
 
 
 def reset_progress(engine):
@@ -131,10 +190,10 @@ def save_comments(engine, tmdb_id: int, comments: list[dict]) -> int:
                 conn.execute(text(f"""
                     INSERT INTO {DB_SCHEMA}.{COMMENTS_TABLE}
                     (tmdb_id, video_id, comment_id, author_name,
-                    author_channel_id, text, published_at, like_count)
+                    author_channel_id, text, clean_text, published_at, like_count)
                     VALUES
                     (:tmdb_id, :video_id, :comment_id, :author_name,
-                    :author_channel_id, :text, :published_at, :like_count)
+                    :author_channel_id, :text, :clean_text, :published_at, :like_count)
                     ON CONFLICT (comment_id) DO NOTHING
                 """), row.to_dict())
             saved += 1
@@ -160,6 +219,12 @@ def _clean_comments_df(df: pd.DataFrame, tmdb_id: int) -> pd.DataFrame:
     df["like_count"] = pd.to_numeric(df["like_count"], errors="coerce")
     df["like_count"] = df["like_count"].where(df["like_count"].notna(), other=None)
     df["like_count"] = df["like_count"].astype("Int64")
+
+    # Emoji replacement before truncation so emojis near the 1000-char boundary aren't cut off
+    emoji_map = get_emoji_map(config.EMOJI_MAP_PATH)
+    df["clean_text"] = df["text"].apply(
+        lambda x: replace_emojis(str(x), emoji_map)[:1000] if pd.notna(x) else None
+    )
 
     # Truncate text fields to avoid oversized payloads
     for col in ["author_name", "text"]:

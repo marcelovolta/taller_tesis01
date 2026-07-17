@@ -1,9 +1,14 @@
 PROJECT_NAME: "movie success prediction"
-START_DATE: "2015-01-01"
-END_DATE: "2015-12-31"
+START_DATE: "2019-01-01"
+END_DATE: "2019-12-31"
 POSTGRE_HOST: "postgres"
 POSTGRE_PORT: 5432
+# Used by scripts launched from the macOS host (e.g. sentiment inference on MPS).
+POSTGRE_HOST_FROM_HOST: "localhost"
+POSTGRE_PORT_FROM_HOST: 5433
 DB_NAME: "analytics"
 DB_SCHEMA: "public"
 TABLE_NAME: "movies_2025"
+MODEL_PATH: "~/repos/tinybert/bert-tiny-imdb-final"
+EMOJI_MAP_PATH: "../seeds/emoji_map.csv"
 
